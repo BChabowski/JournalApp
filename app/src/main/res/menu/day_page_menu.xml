@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/export_to_txt"
+        android:title="@string/export_to_txt"></item>
+    <item android:id="@+id/change_colour"
+        android:title="@string/change_background_colour"
+        ></item>
+</menu>

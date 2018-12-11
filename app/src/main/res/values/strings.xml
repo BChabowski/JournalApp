@@ -1,0 +1,33 @@
+<resources>
+
+    <string name="app_name">JournalApp</string>
+
+    <string name="login">Zaloguj się</string>
+    <string name="logout">Wyloguj się</string>
+    <string name="reset_pass">Zresetuj hasło</string>
+    <string name="confirm_reseting_pass">Resetuj hasło</string>
+    <string name="sign_up">Załóż konto</string>
+    <string name="login_hint">Login</string>
+    <string name="password_hint">Hasło</string>
+    <string name="repeat_password_hint">Powtórz hasło</string>
+    <string name="favourite_author_hint">Podaj ulubionego autora</string>
+    <string name="sign_up_success">Udało się założyć konto! Można się teraz zalogować</string>
+    <string name="sign_up_failure">Proszę uzupełnić wszystkie pola i upewnić się, że hasła są takie same</string>
+    <string name="password_reseted">Udało się zresetować hasło! Proszę założyć nowe konto</string>
+    <string name="password_reset_failure">Podano nieprawidłowego autora. Proszę zwrócić uwagę na kolejność imienia i nazwiska</string>
+    <string name="login_failure">Nieprawidłowy login lub hasło</string>
+    <string name="title">Tytuł</string>
+    <string name="no_title">Bez tytułu</string>
+    <string name="overwrite_existing">Nadpisać istniejący plik?</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+
+    <string name="note_already_exists">Notatka o takim tytule już istnieje. Proszę użyć innego tytułu</string>
+    <string name="add_note_title">Dodaj tytuł</string>
+    <string name="note_failed_to_open">Nie udało się otworzyć notatki!</string>
+    <string name="error">Błąd!</string>
+    <string name="export_to_txt">Eksportuj do .txt</string>
+    <string name="change_background_colour">Zmień kolor tła</string>
+    <string name="show_all_notes">Pokaż wszystkie wpisy</string>
+    <string name="export_all_notes_to_txt">Eksportuj wszystkie wpisy do .txt</string>
+</resources>

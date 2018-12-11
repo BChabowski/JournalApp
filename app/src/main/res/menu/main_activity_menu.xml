@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id = "@+id/show_all_notes"
+        android:title="@string/show_all_notes"></item>
+    <item android:id="@+id/export_all_to_txt"
+        android:title="@string/export_all_notes_to_txt"></item>
+</menu>
