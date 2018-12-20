@@ -46,6 +46,7 @@ public class DayPageModel extends AndroidViewModel {
 
 
     public List<PersonalNotes> getPersonalNotesLinkedToTheDayFromDb() {
+        //move to dbconnectorforPersonalNotes
         try {
             new AsyncTask<Void, Void, Void>() {
                 @Override

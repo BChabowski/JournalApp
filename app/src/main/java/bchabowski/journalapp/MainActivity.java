@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //do rozwinięcia
         model = new MainActivityModel(getApplication());
-//        checkPassword();
+        checkPassword();
+
         resources = getResources();
         calendarView = findViewById(R.id.calendarView);
         helper = new DateHelper(calendarView.getFirstDayOfCurrentMonth(),resources);
@@ -51,14 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
         addNote = findViewById(R.id.addNoteMainActivityFAB);
         setAddNoteListener();
+
     }
 
-    private void checkPassword(){
-        //prototype
-        // todo: change DayPage.class to Login.class
-        Intent intent = new Intent(this,DayPage.class);
-        startActivity(intent);
+    private void checkPassword() {
+        if (model.isProtected()) {
+            Intent i = getIntent();
+            if (!i.hasExtra("pass_ok")) {
+                i = new Intent(this, LoginActivity.class);
+                startActivity(i);
+            }
+        }
     }
+
 
     private void setMonthName(){
         //do modelu?
@@ -122,6 +129,40 @@ public class MainActivity extends AppCompatActivity {
         calendarView.shouldDrawIndicatorsBelowSelectedDays(true);
     }
 
+    public void goToLoginScreen(View v){
+        Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+        startActivity(i);
+    }
+
+    public void goToCreateAcc(View v){
+        Intent i = new Intent(getApplicationContext(),AddPin.class);
+        startActivity(i);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem usePassword = menu.findItem(R.id.use_pass);
+        if(model.isProtected()) usePassword.setTitle(R.string.stop_using_pin);
+
+        else
+            usePassword.setTitle(R.string.set_pin);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        model.chooseOnClickListener(id, this);
+        return true;
+    }
+
     //do przetestowania///////////////
     @Override
     public void onBackPressed() {
@@ -129,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
         else{
             wasBackPressed = true;
-            Toast.makeText(this,"Press back again to quit",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.press_back_again_to_quit,Toast.LENGTH_SHORT).show();
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

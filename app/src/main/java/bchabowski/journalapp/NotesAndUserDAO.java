@@ -1,6 +1,5 @@
 package bchabowski.journalapp;
 
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -44,10 +43,13 @@ public interface NotesAndUserDAO {
     User readUser();
 
     @Insert
-    void createUser(User user);
+    void insertUser(User user);
 
     @Update
     void updateUser(User user);
+
+    @Query("Delete from user")
+    void deleteUser();
 
 
 }

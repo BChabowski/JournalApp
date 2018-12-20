@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id = "@+id/use_pass"
+        android:title=""></item>
+    <item android:id = "@+id/change_background_colour"
+        android:title="@string/change_background_colour"></item>
     <item android:id = "@+id/show_all_notes"
         android:title="@string/show_all_notes"></item>
+    <item android:id="@+id/show_current_month_notes"
+        android:title="@string/show_current_month_notes"></item>
+    <item android:id="@+id/set_daily_target"
+        android:title="@string/set_daily_char_target"></item>
     <item android:id="@+id/export_all_to_txt"
         android:title="@string/export_all_notes_to_txt"></item>
 </menu>

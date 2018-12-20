@@ -51,14 +51,6 @@ public class User {
     }
 
 
-    public String getPinHint() {
-        return pinQuestion;
-    }
-
-    public void setPinHint(String pinHint) {
-        this.pinQuestion = pinHint;
-    }
-
     public boolean isAlwaysLoggedIn() {
         return alwaysLoggedIn;
     }
