@@ -18,7 +18,7 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements Colourable {
     private EditText pinField;
     private TextView forgottenPassword;
     private LoginFragmentsViewModel model;
@@ -90,4 +90,10 @@ public class LoginFragment extends Fragment {
     }
 
 
+    @Override
+    public void setColours() {
+        forgottenPassword.setTextColor(model.getTextColour());
+        view.setBackgroundColor(model.getBackgroundColour());
+//        forgottenPassword.getRootView().setBackgroundColor(model.getBackgroundColour());
+    }
 }

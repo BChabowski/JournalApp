@@ -16,10 +16,11 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ResetPasswordFragment extends Fragment implements View.OnClickListener {
+public class ResetPasswordFragment extends Fragment implements View.OnClickListener, Colourable {
     EditText pinAnswer;
     TextView pinQuestion;
     LoginFragmentsViewModel model;
+    private View view;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -30,7 +31,7 @@ public class ResetPasswordFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
+        view = inflater.inflate(R.layout.fragment_reset_password, container, false);
         model = new LoginFragmentsViewModel(getActivity().getApplication());
         pinAnswer = view.findViewById(R.id.pinAnswer);
         pinQuestion = view.findViewById(R.id.pinQuestion);
@@ -56,4 +57,9 @@ public class ResetPasswordFragment extends Fragment implements View.OnClickListe
         else Toast.makeText(getContext(),"złaodpowiedź",Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void setColours() {
+        pinQuestion.setTextColor(model.getTextColour());
+        view.setBackgroundColor(model.getBackgroundColour());
+    }
 }

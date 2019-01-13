@@ -14,7 +14,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Date;
 
-public class PersonalNotesEditor extends AppCompatActivity {
+public class PersonalNotesEditor extends AppCompatActivity implements Colourable {
     private final long DEFAULT_VALUE = -1;
     private EditText textField;
     private Button hideTextButton;
@@ -23,7 +23,7 @@ public class PersonalNotesEditor extends AppCompatActivity {
     private PersonalNotes personalNote = null;
     private Long entryId = null;
     private Date date;
-    private String toSave, entryDate;
+    private String toSave;
     private Intent intent;
     private DateHelper dateHelper;
 
@@ -40,47 +40,43 @@ public class PersonalNotesEditor extends AppCompatActivity {
         if (intent.hasExtra("entryId")) {
             //if it's edited note
             openFile();
-        }
-        else if (intent.hasExtra("date")){
+        } else if (intent.hasExtra("date")) {
             //if it's note added from DayPage
-         createNewFileWithDate();
-        }
+            createNewFileWithDate();
+        } //if it's note added from main activity
         else createNewFile();
-            //if it's note added from main activity
+
         setDate();
 
-        setTextAndBackgroundColour();
+        setColours();
     }
 
     private void createNewFile() {
         date = Calendar.getInstance().getTime();
     }
 
-    private void createNewFileWithDate(){
+    private void createNewFileWithDate() {
         date = new Date(intent.getLongExtra("date", DEFAULT_VALUE));
     }
 
     private void openFile() {
         entryId = intent.getLongExtra("entryId", DEFAULT_VALUE);
-        //don't know whether this if is necessary
-        if (entryId > DEFAULT_VALUE) {
-            personalNote = model.readPersonalNote(entryId);
+
+        personalNote = model.readPersonalNote(entryId);
+        if (personalNote != null) {
             textField.setText(personalNote.getContent());
 
             date = personalNote.getTimestamp();
 
-        }
-        else Toast.makeText(this,R.string.note_failed_to_open,Toast.LENGTH_LONG).show();
+        } else Toast.makeText(this, R.string.note_failed_to_open, Toast.LENGTH_LONG).show();
     }
 
     private void setDate() {
-        dateHelper = new DateHelper(date);
-        entryDate = dateHelper.getDate();
-        timeField.setText(entryDate);
+        timeField.setText(model.getEntryDateAsString(date));
     }
 
-
-    private void setTextAndBackgroundColour(){
+    @Override
+    public void setColours() {
         int background = model.getBackgroundColour();
         getWindow().getDecorView().setBackgroundColor(background);
         int text = model.getTextColour();
@@ -93,7 +89,6 @@ public class PersonalNotesEditor extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         prepareFile();
-        Toast.makeText(getApplicationContext(), "znaków: "+charCount()+" słów:" +wordCount(),Toast.LENGTH_LONG).show();
     }
 
     protected void prepareFile() {
@@ -104,31 +99,23 @@ public class PersonalNotesEditor extends AppCompatActivity {
     }
 
     private void saveFile() {
-        int chars = charCount();
-        int words = wordCount();
-        if (personalNote == null)
-        {
+        int chars = model.charCount(toSave);
+        int words = model.wordCount(toSave);
+        if (personalNote == null) {
             personalNote = new PersonalNotes(date, toSave, chars, words);
             model.savePersonalNote(personalNote);
 
         } else {
             personalNote.setContent(toSave);
+            personalNote.setCharCount(chars);
+            personalNote.setWordCount(words);
             model.updatePersonalNote(personalNote);
         }
     }
 
-    private void getText(){
-        toSave  = textField.getText().toString();
-    }
-
-    private int charCount(){
-        getText();
-        return model.charCount(toSave);
-    }
-
-    private int wordCount(){
-        getText();
-        return model.wordCount(toSave);
+    private String getText() {
+        toSave = textField.getText().toString();
+        return toSave;
     }
 
     @Override
@@ -136,13 +123,27 @@ public class PersonalNotesEditor extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.personal_notes_editor_menu, menu);
         return true;
     }
-////////////////////////////////
+
+    ////////////////////////////////
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-//        model.chooseOnClickListener(id, context...);
+        switch(id){
+            case R.id.show_char_and_word_count:
+                model.showCharsAndWords(getText());
+                break;
+            case R.id.change_background_colour:
+                model.changeBackgroundColour();
+                recreate();
+                break;
+            case R.id.set_daily_target:
+                model.setCharTarget(this);
+                break;
+        }
         return true;
     }
 
-}
+    }
+
+
 

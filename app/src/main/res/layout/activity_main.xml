@@ -27,6 +27,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        android:id="@+id/calendarViewWhite"
+        android:layout_width="0dp"
+        android:layout_height="357dp"
+        android:layout_marginTop="51dp"
+        app:compactCalendarTextColor="@color/colorWhite"
+        app:compactCalendarTextSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/showMonth"

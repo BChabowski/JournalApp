@@ -63,7 +63,7 @@ public class User {
         return charThreshold;
     }
 
-    public void setCharThreshold(int charThreshold) {
+    public void setCharTarget(int charThreshold) {
         this.charThreshold = charThreshold;
     }
 

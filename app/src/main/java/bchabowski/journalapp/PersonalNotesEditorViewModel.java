@@ -1,108 +1,59 @@
 package bchabowski.journalapp;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
-public class PersonalNotesEditorViewModel extends AndroidViewModel {
-    private UserDatabase db = UserDatabase.getDb(getApplication());
+public class PersonalNotesEditorViewModel extends MainActivityModel {
     private int backgroundColour = Color.WHITE;
     private int textColour;
+    private CharCounterWithDbConn counter;
+    private DbConnectorForPersonalNotes dbConnectorForPersonalNotes;
+    private MenusHelper menusHelper;
 
     public PersonalNotesEditorViewModel(@NonNull Application application) {
         super(application);
+        dbConnectorForPersonalNotes = DbConnectorForPersonalNotes.getDbConnector(getApplication());
+        counter = new CharCounterWithDbConn(dbConnectorForPersonalNotes);
+        menusHelper = new MenusHelper(getApplication());
     }
 
-    public void savePersonalNote(final PersonalNotes personalNote) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.notesAndUserDAO().insertNote(personalNote);
-               return null;
-            }
-        }.execute();
+    public String getEntryDateAsString(Date date){
+        DateHelper dateHelper = new DateHelper(date);
+        return dateHelper.getDate();
     }
-
-    public void updatePersonalNote(final PersonalNotes personalNote){
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.notesAndUserDAO().updateNote(personalNote);
-                return null;
-            }
-        }.execute();
-    }
-    public PersonalNotes readPersonalNote(final long entryId){
-        PersonalNotes note = null;
-        try {
-            note = new AsyncTask<Void, Void, PersonalNotes>() {
-
-                @Override
-                protected PersonalNotes doInBackground(Void... voids) {
-                    return db.notesAndUserDAO().readNoteById(entryId);
-                }
-            }.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(note==null)
-            return new PersonalNotes(new Date(0L),"",0,0);
-        else return note;
-    }
-
-    public int getBackgroundColour() {
-        User user = readUser();
-        if(user!=null){
-            backgroundColour = user.getBackgroundColour();
-        }
-        return backgroundColour;
-    }
-
-    public int getTextColour(){
-        if(backgroundColour==Color.WHITE){
-            textColour = Color.BLACK;
-        }
-        else textColour = Color.WHITE;
-        return textColour;
-    }
-
-    private User readUser(){
-        User user = null;
-        try {
-            user = new AsyncTask<Void, Void, User>() {
-                @Override
-                protected User doInBackground(Void... voids) {
-                    return db.notesAndUserDAO().readUser();
-                }
-            }.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
     public int charCount(String toCount){
-        int chars = toCount.length();
-        return chars;
+        return counter.countChars(toCount);
     }
 
     public int wordCount(String toCount){
-        String trimmed = toCount.trim();
-
-        if(trimmed.length()==0) return 0;
-
-        String[] words = trimmed.split("\\s+");
-
-        return words.length;
+        return counter.countWords(toCount);
     }
+
+
+    //db connection methods
+    public void savePersonalNote(final PersonalNotes personalNote) {
+        dbConnectorForPersonalNotes.savePersonalNote(personalNote);
+    }
+
+    public void updatePersonalNote(PersonalNotes personalNote){
+        dbConnectorForPersonalNotes.updatePersonalNote(personalNote);
+    }
+    public PersonalNotes readPersonalNote(final long entryId){
+        return dbConnectorForPersonalNotes.readPersonalNote(entryId);
+    }
+
+
+    //menu methods
+
+
+    public void showCharsAndWords(String note){
+        Toast.makeText(getApplication(),R.string.chars_count+charCount(note)+"\n"
+                +R.string.words_count+wordCount(note),Toast.LENGTH_LONG).show();
+    }
+
 
 }

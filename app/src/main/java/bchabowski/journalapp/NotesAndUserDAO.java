@@ -28,12 +28,15 @@ public interface NotesAndUserDAO {
     @Query("Select charCount from PersonalNotes where timestamp between :from and :to")
     List<Integer> readCharCountsByDate(Date from, Date to);
 
-    @Query("Select charCount from PersonalNotes")
-    List<Integer> readAllCharCounts();
+    @Query("Select wordCount from PersonalNotes where timestamp between :from and :to")
+    List<Integer> readWordCountsByDate(Date from, Date to);
+
 
     @Query("Select * from PersonalNotes where timestamp between :from and :to order by timestamp")
     List<PersonalNotes> readAllNotesBetween(Date from, Date to);
 
+    @Query("Select * from PersonalNotes order by timestamp")
+    List<PersonalNotes> readAllNotes();
     //User queries
 
     @Query("Select count(*) from User")

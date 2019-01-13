@@ -13,17 +13,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CreateAccountFragment extends Fragment {
+public class CreateAccountFragment extends Fragment implements Colourable {
     private EditText pinField, repeatPinField;
     private String pinCode;
     private LoginFragmentsViewModel model;
+    private View view;
 
     public CreateAccountFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_create_account, container, false);
+        view = inflater.inflate(R.layout.fragment_create_account, container, false);
         model = new LoginFragmentsViewModel(getActivity().getApplication());
         setHasOptionsMenu(true);
 
@@ -98,4 +99,9 @@ public class CreateAccountFragment extends Fragment {
     }
 
 
+    @Override
+    public void setColours() {
+        view.setBackgroundColor(model.getBackgroundColour());
+//        pinField.getRootView().setBackgroundColor(model.getBackgroundColour());
+    }
 }

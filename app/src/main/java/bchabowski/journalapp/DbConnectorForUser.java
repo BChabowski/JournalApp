@@ -71,4 +71,7 @@ public class DbConnectorForUser {
         u.setPinAnswer("");
         updateUser(u);
     }
+
+
+
 }

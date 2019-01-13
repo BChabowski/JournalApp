@@ -19,7 +19,8 @@
         <activity android:name=".DayPage" />
         <activity android:name=".PersonalNotesEditor" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".AddPin"></activity>
+        <activity android:name=".AddPin" />
+        <activity android:name=".ShowNotes"></activity>
     </application>
 
 </manifest>

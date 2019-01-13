@@ -16,7 +16,7 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateAccount2Fragment extends CreateAccountFragment {
+public class CreateAccount2Fragment extends CreateAccountFragment implements Colourable {
     private EditText questionField, answerField;
     private Button setPin;
     private View view;
@@ -71,5 +71,11 @@ public class CreateAccount2Fragment extends CreateAccountFragment {
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void setColours() {
+        view.setBackgroundColor(model.getBackgroundColour());
+//        questionField.getRootView().setBackgroundColor(model.getBackgroundColour());
     }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/dayTV"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="2dp"
+        android:text="31"
+        android:textSize="28dp"
+        android:paddingLeft="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/monthTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Listopada"
+        android:textSize="18dp"
+        android:paddingLeft="5dp"
+        app:layout_constraintStart_toEndOf="@+id/dayTV"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/comma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text=",  "
+        android:textSize="18dp"
+        app:layout_constraintStart_toEndOf="@+id/monthTV"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dayOfTheWeekTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Środa"
+        android:textSize="18dp"
+        app:layout_constraintStart_toEndOf="@+id/comma"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hourTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:text="15:55:55"
+        android:paddingLeft="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/contentTV"
+        app:layout_constraintTop_toBottomOf="@+id/dayTV"
+        tools:layout_editor_absoluteX="2dp" />
+
+    <TextView
+        android:id="@+id/contentTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="TextView"
+        android:paddingBottom="16dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourTV" />
+</android.support.constraint.ConstraintLayout>

@@ -5,7 +5,4 @@
         ></item>
     <item android:id="@+id/set_daily_char_target"
         android:title="@string/set_daily_char_target"></item>
-    <item
-        android:id="@+id/export_to_txt"
-        android:title="@string/export_day_notes_to_txt"></item>
 </menu>

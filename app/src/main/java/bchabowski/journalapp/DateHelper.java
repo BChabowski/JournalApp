@@ -32,37 +32,58 @@ public class DateHelper {
         return wholeDateFormat.format(date);
     }
 
+
     public String getDay() {
-        return dayFormat.format(date);
+        int d = Integer.valueOf(dayFormat.format(date));
+        return String.valueOf(d);
     }
-
-
 
     public String getMonth(){
+        return monthFormat.format(date);
+    }
+
+    public Date getFirstDayOfMonth(){
+        return parseStringToDate("01/"+getMonth()+"/"+getYear()+" 00:00:00");
+    }
+
+    public Date getLastDayOfMonth(){
+        String nextMonth,year;
+        int tmp;
+        if(getMonth().equals("12")){
+            nextMonth = "01";
+            tmp = Integer.parseInt(getYear())+1;
+            year = String.valueOf(tmp);
+        }
+        else{
+            year = getYear();
+            tmp = Integer.parseInt(getMonth())+1;
+            nextMonth = String.valueOf(tmp);
+            if(nextMonth.length()==1)
+                nextMonth = "0"+nextMonth;
+        }
+        Date nextMonthBegg = parseStringToDate("01/"+nextMonth+"/"+year+" 00:00:00");
+        return new Date(nextMonthBegg.getTime()-1L);
+    }
+
+
+    public String getMonthName(){
         if(resources!=null){
         months = resources.getStringArray(R.array.months);
-        return getMonthName();}
-        else return resources.getString(R.string.error);
+        return getMonthNameFromResources();}
+
+        return resources.getString(R.string.error);
     }
 
-    private String getMonthName(){
 
-        int month = Integer.parseInt(monthFormat.format(date));
-
-        return months[month-1];
-    }
 
     public String getWeekday() {
         if(resources!=null){
         weekdays = resources.getStringArray(R.array.weekdays);
         return getWeekdayName();}
-        else return resources.getString(R.string.error);
+
+        return resources.getString(R.string.error);
     }
 
-    private String getWeekdayName(){
-        int weekday = Integer.parseInt(weekdayFormat.format(date));
-        return weekdays[weekday-1];
-    }
 
     public String getDateWithoutHours(){
         return wholeDateWithoutHoursFormat.format(date);
@@ -90,4 +111,16 @@ public class DateHelper {
         return converted;
     }
 
+
+    private String getMonthNameFromResources(){
+
+        int month = Integer.parseInt(monthFormat.format(date));
+
+        return months[month-1];
+    }
+
+    private String getWeekdayName(){
+        int weekday = Integer.parseInt(weekdayFormat.format(date));
+        return weekdays[weekday-1];
+    }
 }

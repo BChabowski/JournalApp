@@ -19,31 +19,40 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
-    protected CompactCalendarView calendarView;
+public class MainActivity extends AppCompatActivity implements Colourable {
+    protected CompactCalendarView calendar;
     protected TextView month;
     protected String[] months, days;
     protected Resources resources;
     protected FloatingActionButton addNote;
-    private DateHelper helper;
     private MainActivityModel model;
 
     private boolean wasBackPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        //will i use set theme?
+        super.setTheme(R.style.DarkStyle);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         model = new MainActivityModel(getApplication());
         checkPassword();
 
         resources = getResources();
-        calendarView = findViewById(R.id.calendarView);
-        helper = new DateHelper(calendarView.getFirstDayOfCurrentMonth(),resources);
+        //to change calendarview easily:
+        if(true){
+            calendar = findViewById(R.id.calendarViewWhite);
+        }
+        else{
+            calendar = findViewById(R.id.calendarView);
+        }
+        calendar.setCalendarBackgroundColor(Color.TRANSPARENT);
+        model.setDate(calendar.getFirstDayOfCurrentMonth());
+
 
         days = resources.getStringArray(R.array.weekdays_abbreviations);
-        calendarView.setDayColumnNames(days);
+        calendar.setDayColumnNames(days);
         setCalendarViewListener();
         setEvents();
 
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         addNote = findViewById(R.id.addNoteMainActivityFAB);
         setAddNoteListener();
 
+        //setColours();
     }
 
     private void checkPassword() {
@@ -68,10 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setMonthName(){
-        //do modelu?
-
-        helper.setDate(calendarView.getFirstDayOfCurrentMonth());
-        month.setText(helper.getMonth()+"  "+helper.getYear());
+        model.setDate(calendar.getFirstDayOfCurrentMonth());
+        month.setText(model.getMonthAndYear());
     }
 
     private void setAddNoteListener(){
@@ -85,21 +93,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setCalendarViewListener(){
-        calendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+        calendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                //do przetestowania!!!!!
-                //i do wrzucenia w model
+                Date customDate = model.createDateWithCurrentHour(dateClicked);
 
-                helper.setDate(dateClicked);
-                String dateString = helper.getDateWithoutHours();
-                Date currDate = new Date();
-                helper.setDate(currDate);
-                dateString += " " + helper.getHour();
-                Date finalDate = helper.parseStringToDate(dateString);
-                helper.setDate(finalDate);
-
-                Long epoch = finalDate.getTime();
+                Long epoch = customDate.getTime();
                 Intent intent = new Intent(getApplicationContext(), DayPage.class);
                 intent.putExtra("epoch",epoch);
 
@@ -124,25 +123,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Event event = new Event(Color.GREEN,date.getTime());
-        calendarView.addEvent(event);
+        calendar.addEvent(event);
         //rysuje kropkę pod zaznaczonym dniem
-        calendarView.shouldDrawIndicatorsBelowSelectedDays(true);
+        calendar.shouldDrawIndicatorsBelowSelectedDays(true);
     }
 
-    public void goToLoginScreen(View v){
-        Intent i = new Intent(getApplicationContext(),LoginActivity.class);
-        startActivity(i);
-    }
-
-    public void goToCreateAcc(View v){
-        Intent i = new Intent(getApplicationContext(),AddPin.class);
-        startActivity(i);
+    ///test it out
+    @Override
+     public void setColours(){
+        int background = model.getBackgroundColourForMain();
+        int text = model.getTextColour();
+        getWindow().getDecorView().setBackgroundColor(background);
+        calendar.setCalendarBackgroundColor(background);
+        addNote.setColorFilter(Color.GRAY);
+        month.setTextColor(text);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
-
         return true;
     }
 
@@ -151,15 +150,38 @@ public class MainActivity extends AppCompatActivity {
         MenuItem usePassword = menu.findItem(R.id.use_pass);
         if(model.isProtected()) usePassword.setTitle(R.string.stop_using_pin);
 
-        else
-            usePassword.setTitle(R.string.set_pin);
+        else usePassword.setTitle(R.string.set_pin);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        model.chooseOnClickListener(id, this);
+        Intent intent;
+        switch(id){
+            case R.id.use_pass:
+               model.usePass(this);
+                break;
+            case R.id.change_background_colour:
+                model.changeBackgroundColour();
+                //to recreate with new colours?
+//                recreate();
+                setColours();
+                break;
+            case R.id.show_all_notes:
+                intent = new Intent(getApplicationContext(),ShowNotes.class);
+                startActivity(intent);
+                break;
+            case R.id.show_current_month_notes:
+                intent = new Intent(getApplicationContext(),ShowNotes.class);
+                Date currDate = new Date();
+                intent.putExtra("epoch",currDate.getTime());
+                startActivity(intent);
+                break;
+            case R.id.set_daily_target:
+                model.setCharTarget(this);
+                break;
+        }
         return true;
     }
 

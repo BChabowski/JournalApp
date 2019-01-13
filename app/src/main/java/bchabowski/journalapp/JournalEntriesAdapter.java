@@ -8,17 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 
 public class JournalEntriesAdapter extends RecyclerView.Adapter<JournalEntriesAdapter.MyViewHolder> {
-    private LayoutInflater inflater;
-
-    private ItemClickListener itemClickListener;
-    private List<PersonalNotes> personalNotes;
+    protected LayoutInflater inflater;
+    protected DateHelper helper = new DateHelper(new Date());
+    protected ItemClickListener itemClickListener;
+    protected List<PersonalNotes> personalNotes;
+    private AdaptersModel model;
 
     public  JournalEntriesAdapter(Context context, List<PersonalNotes> personalNotes){
         inflater = LayoutInflater.from(context);
         this.personalNotes = personalNotes;
+        model = new AdaptersModel(context);
     }
 
     @NonNull
@@ -32,13 +35,14 @@ public class JournalEntriesAdapter extends RecyclerView.Adapter<JournalEntriesAd
     public void onBindViewHolder( MyViewHolder myViewHolder, int i) {
         String content, hour;
         PersonalNotes pn = personalNotes.get(i);
-        DateHelper helper = new DateHelper(pn.getTimestamp());
+        helper.setDate(pn.getTimestamp());
         hour = helper.getHour();
         content = pn.getContent();
         myViewHolder.entryHour.setText(hour);
         myViewHolder.entryContent.setText(content);
-
-
+        myViewHolder.entryHour.getRootView().setBackgroundColor(model.getBackgroundColour());
+        myViewHolder.entryHour.setTextColor(model.getTextColour());
+        myViewHolder.entryContent.setTextColor(model.getTextColour());
     }
 
     @Override

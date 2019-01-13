@@ -3,10 +3,6 @@
     <string name="app_name">JournalApp</string>
 
 
-    <string name="note_already_exists">Notatka o takim tytule już istnieje. Proszę użyć innego tytułu</string>
-    <string name="add_note_title">Dodaj tytuł</string>
-    <string name="note_failed_to_open">Nie udało się otworzyć notatki!</string>
-    <string name="error">Błąd!</string>
     <string name="export_to_txt">Eksportuj do .txt</string>
     <string name="export_day_notes_to_txt">Eksportuj wpisy z dnia do .txt</string>
     <string name="export_note_to_txt">Eksportuj notatkę do .txt</string>
@@ -14,7 +10,11 @@
     <string name="show_all_notes">Pokaż wszystkie wpisy</string>
     <string name="show_current_month_notes">Pokaż wpisy z obecnego miesiąca</string>
     ////
+    <string name="error">Błąd!</string>
+    <string name="note_failed_to_open">Nie udało się otworzyć notatki!</string>
     <string name="set_daily_char_target">Ustaw dzienny cel ilości znaków</string>
+    <string name="zero_means_no_target">Wpisz zero, aby wyłączyć dzienny cel</string>
+    <string name="error_setting_target">Nie udało się ustawić dziennego celu!</string>
     <string name="show_char_and_word_count">Pokaż ilość znaków/słów w notatce</string>
     <string name="press_back_again_to_quit">Naciśnij "Wstecz" jeszcze raz, aby wyjść</string>
     <string name="export_all_notes_to_txt">Eksportuj wszystkie wpisy do .txt</string>
@@ -23,12 +23,16 @@
     <string name="pin_question_field_hint">Pytanie bezpieczeństwa</string>
     <string name="pin_answer_field_hint">Odpowiedź</string>
     <string name="cancel"><u>Anuluj</u></string>
+    <string name="accept">Zaakceptuj</string>
     <string name="login">Zaloguj się</string>
     <string name="pins_dont_match">Pin i powtórzony pin nie zgadzają się</string>
     <string name="forgotten_pin">Nie pamiętam hasła</string>
     <string name="invalid_pin">Pin nieprawidłowy</string>
     <string name="set_pin">Ustaw pin</string>
     <string name="stop_using_pin">Przestań używać pinu</string>
+    <string name="delete_note">Usuń notatkę</string>
+    <string name="chars_count">Ilość znaków: </string>
+    <string name="words_count">Ilość słów: </string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

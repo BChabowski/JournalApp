@@ -2,6 +2,7 @@ package bchabowski.journalapp;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,10 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 
-public class DayPage extends AppCompatActivity {
+public class DayPage extends AppCompatActivity implements Colourable {
     private final Long EPOCH_BEGINING = 0L;
     Date date;
     Intent intent;
@@ -31,6 +33,8 @@ public class DayPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.setTheme(R.style.DarkStyle);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day_page);
         intent = getIntent();
@@ -73,8 +77,15 @@ public class DayPage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
        int id = item.getItemId();
-       model.chooseOnClickListener(id);
-       return true;
+        switch(id) {
+            case R.id.change_colour:
+                model.changeBackgroundColour();
+                recreate();
+                break;
+            case R.id.set_daily_char_target:
+                model.setCharTarget(this);
+                break;
+        }       return true;
     }
 
     private void setDate(){
@@ -115,4 +126,14 @@ public class DayPage extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void setColours() {
+        int text = model.getTextColour();
+        int background = model.getBackgroundColour();
+        day.setTextColor(text);
+        monthAndYear.setTextColor(text);
+        dayOfTheWeek.setTextColor(text);
+        getWindow().getDecorView().setBackgroundColor(background);
+        addNote.setColorFilter(Color.GRAY);
+    }
 }
