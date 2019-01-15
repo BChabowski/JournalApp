@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 
+import com.github.sundeepk.compactcalendarview.domain.Event;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class MainActivityModel extends AndroidViewModel {
@@ -17,6 +21,7 @@ public class MainActivityModel extends AndroidViewModel {
     private Date date;
     private DateHelper helper;
     private MenusHelper menusHelper;
+    private CharCounterWithDbConn counter;
 
     public MainActivityModel(@NonNull Application application) {
         super(application);
@@ -26,6 +31,7 @@ public class MainActivityModel extends AndroidViewModel {
         helper = new DateHelper(date,application.getResources());
         //getAppContext???
         menusHelper = new MenusHelper(application);
+        counter = new CharCounterWithDbConn(dbPN);
     }
 
     //dbU access methods
@@ -44,7 +50,7 @@ public class MainActivityModel extends AndroidViewModel {
         helper.setDate(date);
     }
 
-    public String getMonthAndYear(){
+    public String getMonthNameAndYear(){
         return helper.getMonthName()+"  "+helper.getYear();
     }
 
@@ -78,6 +84,40 @@ public class MainActivityModel extends AndroidViewModel {
     public void setCharTarget(Context context){
         menusHelper.setCharTarget(context);
     }
+
+    public int getCharTarget(){
+        return dbU.readUser().getCharThreshold();
+    }
+
+    public boolean isCharTargetSet(){
+        if(getCharTarget()>0)
+            return true;
+        return false;
+    }
+
+    public ArrayList<Integer> getCounts(Date firstOfMonth) {
+        return counter.getAllCharCountsFromMonth(firstOfMonth);
+    }
+
+    public Event greenEvent(int day){
+        return new Event(Color.GREEN,createDateFromInt(day).getTime());
+    }
+    public Event redEvent(int day){
+        return new Event(Color.RED,createDateFromInt(day).getTime());
+    }
+    public Event blueEvent(int day){
+        return new Event(Color.BLUE,createDateFromInt(day).getTime());
+    }
+
+    private Date createDateFromInt(int day){
+        String dateString = day+"/"+getMonthAndYear();
+        return helper.parseStringWithoutHoursToDate(dateString);
+    }
+
+    private String getMonthAndYear(){
+        return helper.getMonth()+"/"+helper.getYear();
+    }
+
 
     public void changeBackgroundColour(){
         menusHelper.changeBackgroundColour();

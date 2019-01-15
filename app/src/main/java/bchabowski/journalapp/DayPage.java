@@ -90,7 +90,7 @@ public class DayPage extends AppCompatActivity implements Colourable {
 
     private void setDate(){
         day.setText(model.getDay());
-        monthAndYear.setText(model.getMonthAndYear());
+        monthAndYear.setText(model.getMonthNameAndYear());
         dayOfTheWeek.setText(model.getWeekday());
     }
 

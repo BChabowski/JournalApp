@@ -111,6 +111,16 @@ public class DateHelper {
         return converted;
     }
 
+    public Date parseStringWithoutHoursToDate(String toConvert){
+        Date converted = null;
+        try {
+            converted = wholeDateWithoutHoursFormat.parse(toConvert);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return converted;
+    }
+
 
     private String getMonthNameFromResources(){
 

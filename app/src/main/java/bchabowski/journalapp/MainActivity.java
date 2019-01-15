@@ -13,10 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements Colourable {
@@ -26,13 +24,14 @@ public class MainActivity extends AppCompatActivity implements Colourable {
     protected Resources resources;
     protected FloatingActionButton addNote;
     private MainActivityModel model;
+    private ArrayList<Integer> charCounts = new ArrayList<>();
 
     private boolean wasBackPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //will i use set theme?
-        super.setTheme(R.style.DarkStyle);
+        //super.setTheme(R.style.DarkStyle);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -41,13 +40,20 @@ public class MainActivity extends AppCompatActivity implements Colourable {
 
         resources = getResources();
         //to change calendarview easily:
-        if(true){
+        CompactCalendarView hidden;
+        if(model.getTextColour()==Color.WHITE){
             calendar = findViewById(R.id.calendarViewWhite);
+            hidden = findViewById(R.id.calendarView);
         }
         else{
             calendar = findViewById(R.id.calendarView);
+            hidden = findViewById(R.id.calendarViewWhite);
         }
+        hidden.setVisibility(View.INVISIBLE);
+
         calendar.setCalendarBackgroundColor(Color.TRANSPARENT);
+        calendar.shouldDrawIndicatorsBelowSelectedDays(true);
+
         model.setDate(calendar.getFirstDayOfCurrentMonth());
 
 
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements Colourable {
         addNote = findViewById(R.id.addNoteMainActivityFAB);
         setAddNoteListener();
 
-        //setColours();
+        setColours();
     }
 
     private void checkPassword() {
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements Colourable {
 
     private void setMonthName(){
         model.setDate(calendar.getFirstDayOfCurrentMonth());
-        month.setText(model.getMonthAndYear());
+        month.setText(model.getMonthNameAndYear());
     }
 
     private void setAddNoteListener(){
@@ -108,24 +114,40 @@ public class MainActivity extends AppCompatActivity implements Colourable {
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 setMonthName();
+                setEvents();
             }
         });
     }
 
     private void setEvents() {
-        //prototype functionality
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = null;
-        try {
-            date = format.parse("2018/11/22");
-        } catch (ParseException e) {
-            e.printStackTrace();
+        int chars;
+        boolean isCharTargetSet = model.isCharTargetSet();
+        Date firstDayOfMonth = calendar.getFirstDayOfCurrentMonth();
+        model.setDate(firstDayOfMonth);
+        calendar.removeAllEvents();
+        charCounts =  model.getCounts(firstDayOfMonth);
+        for(int i =1;i<=charCounts.size();i++){
+            chars = charCounts.get(i-1);
+            if(isCharTargetSet) {
+                //test it with diff char targets///////////////////////////
+                if(chars > model.getCharTarget()-chars*0.15){
+                    calendar.addEvent(model.redEvent(i));
+                }
+                else if (chars < model.getCharTarget()+ chars*0.15){
+                    calendar.addEvent(model.blueEvent(i));
+                }
+                else{
+                    calendar.addEvent(model.greenEvent(i));
+                }
+            }
+            else{
+                if (charCounts.get(i - 1) > 0) {
+                    calendar.addEvent(model.greenEvent(i));
+                }
+            }
         }
 
-        Event event = new Event(Color.GREEN,date.getTime());
-        calendar.addEvent(event);
-        //rysuje kropkę pod zaznaczonym dniem
-        calendar.shouldDrawIndicatorsBelowSelectedDays(true);
+
     }
 
     ///test it out
@@ -137,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements Colourable {
         calendar.setCalendarBackgroundColor(background);
         addNote.setColorFilter(Color.GRAY);
         month.setTextColor(text);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setEvents();
     }
 
     @Override

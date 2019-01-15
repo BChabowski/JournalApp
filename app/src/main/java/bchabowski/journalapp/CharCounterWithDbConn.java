@@ -32,6 +32,12 @@ public class CharCounterWithDbConn extends CharCounter {
     }
 
     //test with incrementDate method////////////////////////////////////////////////////////////////
+    public ArrayList<Integer> getAllCharCountsFromMonth(Date day){
+        DateHelper helper = new DateHelper(day);
+        Date from = helper.getFirstDayOfMonth();
+        Date to = helper.getLastDayOfMonth();
+        return getAllCharCountsBetween(from,to);
+    }
     public ArrayList<Integer> getAllCharCountsBetween(Date from, Date to){
         Date curr = from;
         ArrayList<Integer> charCounts = new ArrayList<>();
