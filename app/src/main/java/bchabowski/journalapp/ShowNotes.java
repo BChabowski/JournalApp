@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.Date;
@@ -18,13 +19,19 @@ public class ShowNotes extends AppCompatActivity {
     private ShowNotesModel model;
     private JournalEntriesAdapter.ItemClickListener adapterListener;
     private Date date;
+    private View layout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_notes);
-        intent = getIntent();
+
         model = new ShowNotesModel(getApplication());
+        super.setTheme(model.getTheme());
+
+        setContentView(R.layout.activity_show_notes);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        intent = getIntent();
         if(intent.hasExtra("epoch")){
             date = new Date(intent.getLongExtra("epoch",0));
         }
@@ -37,16 +44,19 @@ public class ShowNotes extends AppCompatActivity {
         notes.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
 
+
+        layout = findViewById(R.id.showNotesLayout);
+        model.setSwipeRightToBack(this,layout,notes);
     }
 
     private void setAdapter(){
         if(date!=null){
-            adapter = new ShowNotesAdapter(getApplicationContext(),model.showAllNotesFromCurrentMonth(date));
+            adapter = new ShowNotesAdapter(this,model.showAllNotesFromCurrentMonth(date));
             setAdapterListener();
             notes.setAdapter(adapter);
         }
         else {
-            adapter = new ShowNotesAdapter(getApplicationContext(),model.showAllNotesFromDb());
+            adapter = new ShowNotesAdapter(this,model.showAllNotesFromDb());
             setAdapterListener();
             notes.setAdapter(adapter);
         }
@@ -64,12 +74,27 @@ public class ShowNotes extends AppCompatActivity {
             }
         };
     adapter.setClickListener(adapterListener);
+
 }
 
     @Override
     public void onResume(){
         super.onResume();
         setAdapter();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+
+                Intent i = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                break;
+        }
+        return true;
     }
 
 }

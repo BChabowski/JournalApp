@@ -51,15 +51,16 @@ public class ResetPasswordFragment extends Fragment implements View.OnClickListe
         boolean isAnswerCorrect = model.comparePinAnswerTo(answer);
         if(isAnswerCorrect) {
             model.resetPin();
+            Toast.makeText(getContext(),R.string.password_reseted,Toast.LENGTH_LONG).show();
             Intent i =new Intent(getContext(), MainActivity.class);
             startActivity(i);
         }
-        else Toast.makeText(getContext(),"złaodpowiedź",Toast.LENGTH_LONG).show();
+        else Toast.makeText(getContext().getApplicationContext(),R.string.wrong_answer,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void setColours() {
-        pinQuestion.setTextColor(model.getTextColour());
-        view.setBackgroundColor(model.getBackgroundColour());
+//        pinQuestion.setTextColor(model.getTextColour());
+//        layout.setBackgroundColor(model.getBackgroundColour());
     }
 }

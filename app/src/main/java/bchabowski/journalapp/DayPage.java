@@ -2,7 +2,7 @@ package bchabowski.journalapp;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,41 +10,47 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Date;
 
-public class DayPage extends AppCompatActivity implements Colourable {
+public class DayPage extends AppCompatActivity  {
     private final Long EPOCH_BEGINING = 0L;
-    Date date;
-    Intent intent;
-    TextView day, dayOfTheWeek, monthAndYear;
-    RecyclerView entriesList;
-    FloatingActionButton addNote;
-    Resources resources;
-    DayPageModel model;
-    JournalEntriesAdapter adapter;
-    JournalEntriesAdapter.ItemClickListener adapterListener;
+    private Date date;
+    private Intent intent;
+    private TextView day, dayOfTheWeek, monthAndYear;
+    private RecyclerView entriesList;
+    private FloatingActionButton addNote;
+    private Resources resources;
+    private DayPageModel model;
+    private JournalEntriesAdapter adapter;
+    private JournalEntriesAdapter.ItemClickListener adapterListener;
+    private View layout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.setTheme(R.style.DarkStyle);
+        intent = getIntent();
+        model = new DayPageModel(getApplication(),intent.getLongExtra("epoch",EPOCH_BEGINING));
+//        int bckgr = model.getBackgroundColour();
+//        if(bckgr==Color.WHITE) super.setTheme(R.style.AppTheme);
+//        else super.setTheme(R.style.DarkStyle);
+
+        super.setTheme(model.getTheme());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day_page);
-        intent = getIntent();
         resources = getResources();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         day = findViewById(R.id.dayTV);
         dayOfTheWeek = findViewById(R.id.dayOfTheWeek);
         monthAndYear = findViewById(R.id.monthAndYear);
 
-        model = new DayPageModel(getApplication(),intent.getLongExtra("epoch",EPOCH_BEGINING));
         setDate();
 
         entriesList = findViewById(R.id.entriesRecyclerView);
@@ -60,30 +66,40 @@ public class DayPage extends AppCompatActivity implements Colourable {
         addNote = findViewById(R.id.addNoteDayPageFAB);
         setAddNoteListener();
 
+        layout = findViewById(R.id.dayPageLayout);
+        model.setSwipeRightToBack(this,layout,entriesList);
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.day_page_menu, menu);
-        return true;
-    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.day_page_menu, menu);
+//        return true;
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //recreate();
         setAdapter();
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
        int id = item.getItemId();
         switch(id) {
+
             case R.id.change_colour:
                 model.changeBackgroundColour();
                 recreate();
                 break;
             case R.id.set_daily_char_target:
                 model.setCharTarget(this);
+                break;
+            case android.R.id.home:
+                finish();
                 break;
         }       return true;
     }
@@ -126,14 +142,14 @@ public class DayPage extends AppCompatActivity implements Colourable {
         });
     }
 
-    @Override
-    public void setColours() {
-        int text = model.getTextColour();
-        int background = model.getBackgroundColour();
-        day.setTextColor(text);
-        monthAndYear.setTextColor(text);
-        dayOfTheWeek.setTextColor(text);
-        getWindow().getDecorView().setBackgroundColor(background);
-        addNote.setColorFilter(Color.GRAY);
-    }
+//    @Override
+//    public void setColours() {
+//        int text = model.getTextColour();
+//        int background = model.getBackgroundColour();
+//        day.setTextColor(text);
+//        monthAndYear.setTextColor(text);
+//        dayOfTheWeek.setTextColor(text);
+//        getWindow().getDecorView().setBackgroundColor(background);
+//        addNote.setColorFilter(Color.GRAY);
+//    }
 }

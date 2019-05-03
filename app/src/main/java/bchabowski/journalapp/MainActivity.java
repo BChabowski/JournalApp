@@ -1,19 +1,27 @@
 package bchabowski.journalapp;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements Colourable {
     protected String[] months, days;
     protected Resources resources;
     protected FloatingActionButton addNote;
+
+    private Button button;
+
     private MainActivityModel model;
     private ArrayList<Integer> charCounts = new ArrayList<>();
 
@@ -30,16 +41,17 @@ public class MainActivity extends AppCompatActivity implements Colourable {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //will i use set theme?
-        //super.setTheme(R.style.DarkStyle);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
         model = new MainActivityModel(getApplication());
+        super.setTheme(model.getTheme());
+//        super.setTheme(R.style.AppTheme);
+
+        setContentView(R.layout.activity_main);
         checkPassword();
 
         resources = getResources();
-        //to change calendarview easily:
+        //to change calendarview easily, so it matches theme:
         CompactCalendarView hidden;
         if(model.getTextColour()==Color.WHITE){
             calendar = findViewById(R.id.calendarViewWhite);
@@ -69,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements Colourable {
         addNote = findViewById(R.id.addNoteMainActivityFAB);
         setAddNoteListener();
 
-        setColours();
+
+
+        //setColours();
     }
 
     private void checkPassword() {
@@ -77,12 +91,13 @@ public class MainActivity extends AppCompatActivity implements Colourable {
             Intent i = getIntent();
             if (!i.hasExtra("pass_ok")) {
                 i = new Intent(this, LoginActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
         }
     }
 
-
+    //after updating date in model it sets month name
     private void setMonthName(){
         model.setDate(calendar.getFirstDayOfCurrentMonth());
         month.setText(model.getMonthNameAndYear());
@@ -128,12 +143,12 @@ public class MainActivity extends AppCompatActivity implements Colourable {
         charCounts =  model.getCounts(firstDayOfMonth);
         for(int i =1;i<=charCounts.size();i++){
             chars = charCounts.get(i-1);
+            if(chars<1) continue;
             if(isCharTargetSet) {
-                //test it with diff char targets///////////////////////////
-                if(chars > model.getCharTarget()-chars*0.15){
+                if(chars < model.getCharTarget()-chars*0.15){
                     calendar.addEvent(model.redEvent(i));
                 }
-                else if (chars < model.getCharTarget()+ chars*0.15){
+                else if (chars > 0 && chars > model.getCharTarget()+ chars*0.15){
                     calendar.addEvent(model.blueEvent(i));
                 }
                 else{
@@ -141,19 +156,15 @@ public class MainActivity extends AppCompatActivity implements Colourable {
                 }
             }
             else{
-                if (charCounts.get(i - 1) > 0) {
                     calendar.addEvent(model.greenEvent(i));
-                }
             }
         }
-
-
     }
 
     ///test it out
     @Override
      public void setColours(){
-        int background = model.getBackgroundColourForMain();
+        int background = model.getBackgroundColour();
         int text = model.getTextColour();
         getWindow().getDecorView().setBackgroundColor(background);
         calendar.setCalendarBackgroundColor(background);
@@ -193,8 +204,8 @@ public class MainActivity extends AppCompatActivity implements Colourable {
             case R.id.change_background_colour:
                 model.changeBackgroundColour();
                 //to recreate with new colours?
-//                recreate();
-                setColours();
+                recreate();
+//                setColours();
                 break;
             case R.id.show_all_notes:
                 intent = new Intent(getApplicationContext(),ShowNotes.class);
@@ -209,18 +220,24 @@ public class MainActivity extends AppCompatActivity implements Colourable {
             case R.id.set_daily_target:
                 model.setCharTarget(this);
                 break;
+            case R.id.search_by_tags:
+                model.showTagsMessagebox(this);
+                break;
+            case R.id.show_all_tags:
+                model.showAllTags(this);
+                break;
         }
         return true;
     }
 
-    //do przetestowania///////////////
     @Override
     public void onBackPressed() {
         if(wasBackPressed)
-        super.onBackPressed();
+//        super.onBackPressed();
+            finishAffinity();
         else{
             wasBackPressed = true;
-            Toast.makeText(this,R.string.press_back_again_to_quit,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.press_back_again_to_quit,Toast.LENGTH_SHORT).show();
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -37,6 +37,12 @@ public interface NotesAndUserDAO {
 
     @Query("Select * from PersonalNotes order by timestamp")
     List<PersonalNotes> readAllNotes();
+
+//    @Query("Select * from PersonalNotes order by timestamp")
+//    List<PersonalNotes> readAllNotes();
+
+    @Query("Select * from PersonalNotes where tags like :tag")
+    List<PersonalNotes> readNotesByTag(String tag);
     //User queries
 
     @Query("Select count(*) from User")

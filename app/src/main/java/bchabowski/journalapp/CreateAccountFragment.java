@@ -35,7 +35,6 @@ public class CreateAccountFragment extends Fragment implements Colourable {
         model.showKeyboard();
         observePinFields();
         User u = model.readUser();
-        Toast.makeText(getContext(),u.getPinCode(),Toast.LENGTH_LONG).show();
         return view;
     }
 
@@ -78,7 +77,7 @@ public class CreateAccountFragment extends Fragment implements Colourable {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.AddPinLayout, createAccount2).commit();
                 } else {
-                    Toast.makeText(getContext(), R.string.pins_dont_match, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext().getApplicationContext(), R.string.pins_dont_match, Toast.LENGTH_LONG).show();
                 }
             }
             }

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/delete_note"
+        android:title="@string/delete_note"></item>
     <item android:id="@+id/show_char_and_word_count"
         android:title="@string/show_char_and_word_count"></item>
+    <!--<item-->
+        <!--android:id="@+id/change_background_colour"-->
+        <!--android:title="@string/change_background_colour"></item>-->
     <item
-        android:id="@+id/change_background_colour"
-        android:title="@string/change_background_colour"></item>
+        android:id="@+id/add_tags"
+        android:title="@string/add_tags"></item>
+    <item android:id="@+id/show_all_tags"
+        android:title="@string/show_all_tags"></item>
     <item
         android:id="@+id/set_daily_target"
         android:title="@string/set_daily_char_target"></item>
+    <item
+        android:id="@+id/export_to_txt"
+        android:title="@string/export_note_to_txt"></item>
+
 </menu>

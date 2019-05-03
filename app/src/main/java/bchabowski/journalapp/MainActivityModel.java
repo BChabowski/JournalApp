@@ -1,12 +1,18 @@
 package bchabowski.journalapp;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Layout;
+import android.view.View;
+import android.widget.EditText;
 
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
@@ -22,6 +28,8 @@ public class MainActivityModel extends AndroidViewModel {
     private DateHelper helper;
     private MenusHelper menusHelper;
     private CharCounterWithDbConn counter;
+    private EditText input;
+    private String tags;
 
     public MainActivityModel(@NonNull Application application) {
         super(application);
@@ -34,8 +42,12 @@ public class MainActivityModel extends AndroidViewModel {
         counter = new CharCounterWithDbConn(dbPN);
     }
 
-    //dbU access methods
 
+    public int getTheme(){
+        int bckgr = getBackgroundColour();
+        if(bckgr==Color.WHITE) return R.style.AppTheme;
+        else return R.style.DarkStyle;
+    }
 
     public boolean isProtected() {
         User user = readUser();
@@ -81,8 +93,8 @@ public class MainActivityModel extends AndroidViewModel {
         }
     }
 
-    public void setCharTarget(Context context){
-        menusHelper.setCharTarget(context);
+    public void setCharTarget(Activity context){
+        menusHelper.setCharTarget(context, getTheme());
     }
 
     public int getCharTarget(){
@@ -135,6 +147,59 @@ public class MainActivityModel extends AndroidViewModel {
 
     public int getTextColour(){
         return menusHelper.getTextColour();
+    }
+
+    public void showTagsMessagebox(final Context context){
+
+        TagsMessageBox mbx = new TagsMessageBox();
+        mbx.findTagsMessagebox(context, R.string.add_tags_messagebox,TagsList.class);
+
+
+    }
+
+    public void showAllTags(Context context){
+        Intent i = new Intent(context,TagsList.class);
+        context.startActivity(i);
+    }
+
+    public void setSwipeRightToBack(final Activity activityClass, View layout, RecyclerView rv){
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeRightToBack(activityClass));
+        itemTouchHelper.attachToRecyclerView(rv);
+
+
+
+        OnSwipeTouchListener onTouchListener = new OnSwipeTouchListener(layout.getContext()) {
+            public void onSwipeRight() {
+                activityClass.onBackPressed();
+            }
+        };
+        layout.setOnTouchListener(onTouchListener);
+        rv.setOnTouchListener(onTouchListener);
+    }
+
+    private ItemTouchHelper.SimpleCallback swipeRightToBack(final Activity activityClass){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+
+
+            @Override public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                onSwiped(viewHolder, super.getSwipeDirs(recyclerView, viewHolder));
+                return 0;
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if(direction==ItemTouchHelper.RIGHT)
+                    activityClass.onBackPressed();
+            }
+        };
+
+        return simpleItemTouchCallback;
     }
 
 }

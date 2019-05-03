@@ -31,18 +31,23 @@ public class JournalEntriesAdapter extends RecyclerView.Adapter<JournalEntriesAd
         return new MyViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder( MyViewHolder myViewHolder, int i) {
-        String content, hour;
+        String content, hour, tags;
         PersonalNotes pn = personalNotes.get(i);
         helper.setDate(pn.getTimestamp());
         hour = helper.getHour();
         content = pn.getContent();
+        tags = pn.getTags();
         myViewHolder.entryHour.setText(hour);
         myViewHolder.entryContent.setText(content);
-        myViewHolder.entryHour.getRootView().setBackgroundColor(model.getBackgroundColour());
-        myViewHolder.entryHour.setTextColor(model.getTextColour());
-        myViewHolder.entryContent.setTextColor(model.getTextColour());
+        myViewHolder.tagsTV.setText(tags);
+        if(tags.equals("")) myViewHolder.tagsTV.setVisibility(View.GONE);
+//        myViewHolder.entryHour.getRootView().setBackgroundColor(model.getBackgroundColour());
+//        myViewHolder.entryHour.setTextColor(model.getTextColour());
+//        myViewHolder.entryContent.setTextColor(model.getTextColour());
     }
 
     @Override
@@ -55,18 +60,21 @@ public class JournalEntriesAdapter extends RecyclerView.Adapter<JournalEntriesAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView entryHour, entryContent;
+        TextView entryHour, entryContent, tagsTV;
         public MyViewHolder( View view){
             super(view);
             entryHour = view.findViewById(R.id.entryHourInSingleEntry);
             entryContent = view.findViewById(R.id.entryContentInSingleEntry);
-
+            tagsTV = view.findViewById(R.id.entryTagsTV);
             view.setOnClickListener(this);
+
         }
         @Override
         public void onClick(View v) {
             if(itemClickListener != null) itemClickListener.onItemClick(v, getAdapterPosition());
         }
+
+
     }
 
 

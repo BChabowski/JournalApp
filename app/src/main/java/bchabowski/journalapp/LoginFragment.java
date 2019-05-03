@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment implements Colourable {
             i.putExtra("pass_ok", "");
             startActivity(i);
         } else
-            Toast.makeText(getContext(), R.string.invalid_pin, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext().getApplicationContext(), R.string.invalid_pin, Toast.LENGTH_LONG).show();
     }
 
     private void setForgottenPassListener() {

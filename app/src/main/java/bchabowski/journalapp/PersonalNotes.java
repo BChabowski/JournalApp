@@ -14,16 +14,42 @@ public class PersonalNotes {
     private String content;
     private int charCount;
     private int wordCount;
+    private String tags;
 
-    public PersonalNotes(Date timestamp, String content, int charCount, int wordCount) {
+    public PersonalNotes(Date timestamp, String content, int charCount, int wordCount, String tags) {
         this.timestamp = timestamp;
         this.content = content;
         this.charCount = charCount;
         this.wordCount = wordCount;
+        this.tags = tags;
     }
 
 
+    public static PersonalNotes getEmptyPersonalNote(){
+        return new PersonalNotes(new Date(0L),"",0,0,"");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if(this.getEntryId()==((PersonalNotes)obj).getEntryId())
+            return true;
+        return false;
+    }
+
     //getters and setters
+
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public long getEntryId() {
         return entryId;
     }

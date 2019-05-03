@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 import java.util.List;
 
-public class ShowNotesModel extends AndroidViewModel {
+public class ShowNotesModel extends MainActivityModel {
     private DbConnectorForPersonalNotes db;
     private List<PersonalNotes> personalNotes;
 

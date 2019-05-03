@@ -65,10 +65,14 @@ public class CreateAccount2Fragment extends CreateAccountFragment implements Col
             public void onClick(View v) {
                 String question = questionField.getText().toString();
                 String answer = answerField.getText().toString();
-                Toast.makeText(getContext(),pin+question+answer,Toast.LENGTH_LONG).show();
+                if(!question.equals("")&&!answer.equals("")){
                 model.setPinQuestionAndAnswer(pin,question,answer);
                 model.getInputMethodManager().hideSoftInputFromWindow(v.getWindowToken(),0);
-                getActivity().onBackPressed();
+                getActivity().onBackPressed();}
+                else{
+                    //jeśli któreś z pól jest puste
+                    Toast.makeText(view.getContext().getApplicationContext(),R.string.question_or_answer_are_blanks,Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -6,6 +6,7 @@
     <string name="export_to_txt">Eksportuj do .txt</string>
     <string name="export_day_notes_to_txt">Eksportuj wpisy z dnia do .txt</string>
     <string name="export_note_to_txt">Eksportuj notatkę do .txt</string>
+    <string name="saved_to_txt">Pomyślnie zapisano do pliku .txt</string>
     <string name="change_background_colour">Zmień kolor tła</string>
     <string name="show_all_notes">Pokaż wszystkie wpisy</string>
     <string name="show_current_month_notes">Pokaż wpisy z obecnego miesiąca</string>
@@ -13,7 +14,9 @@
     <string name="error">Błąd!</string>
     <string name="note_failed_to_open">Nie udało się otworzyć notatki!</string>
     <string name="set_daily_char_target">Ustaw dzienny cel ilości znaków</string>
+    <string name="current_target">Obecny cel:</string>
     <string name="zero_means_no_target">Wpisz zero, aby wyłączyć dzienny cel</string>
+    <string name="target_set">Ustawiono dzienny cel znaków na:</string>
     <string name="error_setting_target">Nie udało się ustawić dziennego celu!</string>
     <string name="show_char_and_word_count">Pokaż ilość znaków/słów w notatce</string>
     <string name="press_back_again_to_quit">Naciśnij "Wstecz" jeszcze raz, aby wyjść</string>
@@ -22,8 +25,11 @@
     <string name="repeat_pin_field_hint">Powtórz PIN</string>
     <string name="pin_question_field_hint">Pytanie bezpieczeństwa</string>
     <string name="pin_answer_field_hint">Odpowiedź</string>
+    <string name="question_or_answer_are_blanks">Proszę wypełnić pola Pytanie bezpieczeństwa i Odpowiedź</string>
+    <string name="wrong_answer">Zła odpowiedź</string>
+    <string name="password_reseted">Hasło zostało zresetowane</string>
     <string name="cancel"><u>Anuluj</u></string>
-    <string name="accept">Zaakceptuj</string>
+    <string name="accept">OK</string>
     <string name="login">Zaloguj się</string>
     <string name="pins_dont_match">Pin i powtórzony pin nie zgadzają się</string>
     <string name="forgotten_pin">Nie pamiętam hasła</string>
@@ -31,8 +37,15 @@
     <string name="set_pin">Ustaw pin</string>
     <string name="stop_using_pin">Przestań używać pinu</string>
     <string name="delete_note">Usuń notatkę</string>
+    <string name="delete_confirmation">Czy na pewno chcesz usunąć notatkę?</string>
     <string name="chars_count">Ilość znaków: </string>
     <string name="words_count">Ilość słów: </string>
+    <string name="search_by_tags">Wyszukaj w tagach</string>
+    <string name="show_all_tags">Pokaż wszystkie tagi</string>
+    <string name="add_tags">Dodaj tagi</string>
+    <string name="add_tags_messagebox">Wpisz tagi oddzielając je przecinkami: </string>
+    <!--<string name="find_tags">Podaj tagi do wyszukania oddzielając je przecinkami: </string>-->
+    <string name="empty_tags_search_field">Treść wyszukiwania nie może być pusta!</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
