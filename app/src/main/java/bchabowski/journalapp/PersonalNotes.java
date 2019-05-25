@@ -8,7 +8,7 @@ import java.util.Date;
 @Entity
 public class PersonalNotes {
     @PrimaryKey(autoGenerate = true)
-    private long entryId;
+    private Long entryId;
 
     private Date timestamp;
     private String content;
@@ -50,7 +50,7 @@ public class PersonalNotes {
         this.tags = tags;
     }
 
-    public long getEntryId() {
+    public Long getEntryId() {
         return entryId;
     }
 

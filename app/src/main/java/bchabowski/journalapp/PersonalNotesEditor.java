@@ -24,8 +24,8 @@ public class PersonalNotesEditor extends AppCompatActivity {
     private TextView timeField, tagsField;
     private FloatingActionButton done;
     private PersonalNotesEditorViewModel model;
-    private PersonalNotes personalNote = PersonalNotes.getEmptyPersonalNote();
-    private Long entryId = null;
+    //private PersonalNotes personalNote = PersonalNotes.getEmptyPersonalNote();
+
     private Date date;
     private String toSave;
     private Intent intent;
@@ -57,6 +57,7 @@ public class PersonalNotesEditor extends AppCompatActivity {
         } //if it's note added from main activity
         else createNewFile();
 
+
         //so keyboard won't cover edittext
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
@@ -64,31 +65,69 @@ public class PersonalNotesEditor extends AppCompatActivity {
         setTags();
         setTagsClickListener();
 
-        OnSwipeTouchListener onTouchListener = new OnSwipeTouchListener(this) {
-            public void onSwipeRight() {
-                onBackPressed();
-            }
-        };
-        textField.setOnTouchListener(onTouchListener);
+        //dunno how to fix it, and I'm too tired to search
+
+//        OnSwipeTouchListener onTouchListener = new OnSwipeTouchListener(this) {
+//            public void onSwipeRight() {
+//                onBackPressed();
+//            }
+//            public void onSwipeTop() {super.onSwipeTop();}
+//            public void onSwipeBottom() {super.onSwipeBottom();}
+//        };
+//        textField.setOnTouchListener(onTouchListener);
     }
 
     private void setTagsClickListener(){
         tagsField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveFile();
-                Intent i = new Intent(getApplicationContext(), TagsList.class);
-                i.putExtra("tagsString",tagsField.getText().toString());
-                startActivity(i);
+                //saveFile();
+                addTagsViaModel();
             }
         });
     }
 
-    public void setTags(){
-        if(personalNote.getTags().equals("")) tagsField.setVisibility(View.GONE);
-        else tagsField.setVisibility(View.VISIBLE);
 
-        tagsField.setText(personalNote.getTags());
+    public void setTags(){
+        String tags = model.getPersonalNote().getTags().trim();
+
+        //to prevent adding last tag over and over again after clicking OK in add tags dialog without changing anything
+        String[] noteTags = tags.split(",");
+
+
+        String tagsUpdated = new String();
+        boolean hasNewTag = intent.hasExtra("newTag");
+        if(hasNewTag){
+            String newTag = intent.getStringExtra("newTag");
+//            for(String s:noteTags){
+//                String trimmed = s.trim();
+//                if(trimmed.equals(newTag)){
+//                    return;
+//                }
+//            }
+            if(tags.equals("")){
+                model.getPersonalNote().setTags(newTag);
+            }
+            else {
+                boolean isLastCharComma = tags.charAt(tags.length()-1)==',';
+                if(isLastCharComma){
+                    tagsUpdated = tags + " "+newTag;
+                }
+                else{
+                    tagsUpdated = tags + ", "+newTag;
+                }
+                model.getPersonalNote().setTags(tagsUpdated);
+            }
+            intent.removeExtra("newTag");
+        }
+
+//        if(tags.equals("")) tagsField.setVisibility(View.GONE);
+//        else
+            tagsField.setVisibility(View.VISIBLE);
+
+        tagsField.setText(model.getPersonalNote().getTags());
+
+
 //        ConstraintLayout layout = (ConstraintLayout)findViewById(R.id.textEditorLayout);
 //        ConstraintSet set = new ConstraintSet();
 //        String[] tags = personalNote.getTags().split(",");
@@ -106,24 +145,23 @@ public class PersonalNotesEditor extends AppCompatActivity {
 
     private void createNewFile() {
         date = Calendar.getInstance().getTime();
-        personalNote.setTimestamp(date);
+        model.getPersonalNote().setTimestamp(date);
     }
 
     private void createNewFileWithDate() {
         date = new Date(intent.getLongExtra("date", DEFAULT_VALUE));
-        personalNote.setTimestamp(date);
+        model.getPersonalNote().setTimestamp(date);
     }
 
     private void openFile() {
-        entryId = intent.getLongExtra("entryId", DEFAULT_VALUE);
+        Long entryId = intent.getLongExtra("entryId", DEFAULT_VALUE);
         isNewFile = false;
-        personalNote = model.readPersonalNote(entryId);
-        if (personalNote != null) {
-            textField.setText(personalNote.getContent());
+        model.setPersonalNote(entryId);
 
-            date = personalNote.getTimestamp();
+            textField.setText(model.getPersonalNote().getContent());
 
-        } else Toast.makeText(getApplicationContext(), R.string.note_failed_to_open, Toast.LENGTH_LONG).show();
+            date = model.getPersonalNote().getTimestamp();
+
     }
 
     private void setDate() {
@@ -152,34 +190,24 @@ public class PersonalNotesEditor extends AppCompatActivity {
     }
 
     protected void saveFile() {
-        getText();
+        toSave = textField.getText().toString();
         if (!toSave.trim().equals("")) {
             saveOrUpdateFile();
         }
     }
 
-
-
     //chyba działa
     private void saveOrUpdateFile() {
-        int chars = model.charCount(toSave);
-        int words = model.wordCount(toSave);
-        personalNote.setContent(toSave);
-        personalNote.setCharCount(chars);
-        personalNote.setWordCount(words);
-        if (entryId == null) {
-            model.savePersonalNote(personalNote);
-        } else {
-            model.updatePersonalNote(personalNote);
-        }
+        model.saveOrUpdatePersonalNote(toSave);
+
     }
 
 
 
-    private String getText() {
-        toSave = textField.getText().toString();
-        return toSave;
-    }
+//    private String getText() {
+//        toSave = textField.getText().toString();
+//        return toSave;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,6 +215,10 @@ public class PersonalNotesEditor extends AppCompatActivity {
         return true;
     }
 
+    private void addTagsViaModel(){
+
+        model.addTags(this, tagsField);
+    }
     ////////////////////////////////
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -199,11 +231,11 @@ public class PersonalNotesEditor extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.delete_note:
-                if(isNewFile) dontSave();
-                else model.deleteNote(this,personalNote);
+                if(model.isNewFile()) dontSave();
+                else model.deleteNote(this);
                 break;
             case R.id.show_char_and_word_count:
-                model.showCharsAndWords(getText(), this);
+                model.showCharsAndWords(textField.getText().toString(), this);
                 break;
             case R.id.change_background_colour:
                 model.changeBackgroundColour();
@@ -213,7 +245,7 @@ public class PersonalNotesEditor extends AppCompatActivity {
                 model.setCharTarget(this);
                 break;
             case R.id.add_tags:
-                model.addTags(this, personalNote, tagsField);
+                addTagsViaModel();
                 //setTags();
                 break;
             case R.id.export_to_txt:
@@ -221,12 +253,12 @@ public class PersonalNotesEditor extends AppCompatActivity {
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         1);
                 saveFile();
-                model.exportToTxt(this,personalNote);
+                model.exportToTxt(this);
                 break;
-            case R.id.show_all_tags:
-                saveFile();
-                model.showAllTags(this);
-                break;
+//            case R.id.show_all_tags:
+//                saveFile();
+//                model.showAllTags(this);
+//                break;
         }
         return true;
     }

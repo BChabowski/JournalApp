@@ -36,7 +36,7 @@ public class TagsListAdapter extends RecyclerView.Adapter<TagsListAdapter.TagsVi
         String[] words;
         PersonalNotes pn = personalNotes.get(i);
         helper.setDate(pn.getTimestamp());
-        //set content to be first 10 words
+        //set content to be first wordsToShow words
         //wyrzucić w inne miejsce??????
         int wordsToShow = 50;
         content = pn.getContent().trim();

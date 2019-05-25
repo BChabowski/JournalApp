@@ -14,7 +14,7 @@ public interface NotesAndUserDAO {
 
     //Personal Notes Queries
     @Insert
-    void insertNote(PersonalNotes personalNotes);
+    long insertNote(PersonalNotes personalNotes);
 
     @Update
     void updateNote(PersonalNotes personalNotes);

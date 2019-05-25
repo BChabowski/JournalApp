@@ -36,6 +36,24 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
         menusHelper = new MenusHelper(getApplication());
     }
 
+    public boolean isNewFile(){
+       return pn.getEntryId() == null;
+    }
+
+    public void setPersonalNote(long id){
+        pn = readPersonalNote(id);
+    }
+    public void saveOrUpdatePersonalNote(String content){
+        pn.setContent(content);
+        pn.setCharCount(charCount(content));
+        pn.setWordCount(wordCount(content));
+        if (isNewFile()) {
+            savePersonalNote(pn);
+        } else {
+            updatePersonalNote(pn);
+        }
+    }
+
     public String getEntryDateAsString(Date date){
         DateHelper dateHelper = new DateHelper(date);
         return dateHelper.getDate();
@@ -50,14 +68,15 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
 
 
     //db connection methods
-    public void savePersonalNote(final PersonalNotes personalNote) {
-        dbConnectorForPersonalNotes.savePersonalNote(personalNote);
+    public void savePersonalNote(PersonalNotes personalNote) {
+        Long id = dbConnectorForPersonalNotes.savePersonalNote(personalNote);
+        pn = readPersonalNote(id);
     }
 
     public void updatePersonalNote(PersonalNotes personalNote){
         dbConnectorForPersonalNotes.updatePersonalNote(personalNote);
     }
-    public PersonalNotes readPersonalNote(final long entryId){
+    private PersonalNotes readPersonalNote(final long entryId){
         return dbConnectorForPersonalNotes.readPersonalNote(entryId);
     }
 
@@ -77,9 +96,9 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
                 +wordsCount+wordCount(note),Toast.LENGTH_LONG).show();
     }
 
-    public void addTags(final Context context, PersonalNotes note, TextView tv){
+    public void addTags(final Context context, TextView tv){
     //////wywalić do tagsMessageBoxa kiedyś
-        pn = note;
+
         txtv = tv;
         tags = pn.getTags();
         input = new EditText(context);
@@ -93,14 +112,21 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
             public void onClick(DialogInterface dialog, int which) {
                 tags = input.getText().toString();
                 pn.setTags(tags);
+                //set tags on screen
                 ((PersonalNotesEditor)context).setTags();
+                ((PersonalNotesEditor)context).saveFile();
             }
         });
         msgbox.setNeutralButton(R.string.show_all_tags, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                tags = input.getText().toString();
+                pn.setTags(tags);
+                ((PersonalNotesEditor)context).saveFile();
                 Intent i = new Intent(context,TagsList.class);
-                i.putExtra("isCalledFromEditor",true);
+                i.putExtra("entryId",pn.getEntryId());
+                i.putExtra("noteTags",tags);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(i);
             }
         });
@@ -113,7 +139,7 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
     }
 
 
-    public void deleteNote(final Context context, final PersonalNotes pn){
+    public void deleteNote(final Context context){
         AlertDialog.Builder msgbox = new AlertDialog.Builder(context);
         msgbox.setTitle(R.string.delete_confirmation);
         msgbox.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
@@ -123,16 +149,18 @@ public class PersonalNotesEditorViewModel extends MainActivityModel {
                 ((PersonalNotesEditor)context).dontSave();
             }
         });
-//        msgbox.setNegativeButton(R.string.cancel, null);
         msgbox.create();
         msgbox.show();
 
     }
 
-    public void exportToTxt(Context context,PersonalNotes note){
+    public void exportToTxt(Context context){
         ExportToTxt export = new ExportToTxt();
-        export.exportToTxt(context,note);
+        export.exportToTxt(context,pn);
     }
 
+    public PersonalNotes getPersonalNote(){
+        return pn;
+    }
 
 }

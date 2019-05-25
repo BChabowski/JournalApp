@@ -27,15 +27,23 @@ public class DbConnectorForPersonalNotes {
         return connInstance;
     }
 
-    public void savePersonalNote(PersonalNotes personalNote) {
+    public Long savePersonalNote(PersonalNotes personalNote) {
         //PersonalNotes[] notes = {personalNote};
-        new AsyncTask<PersonalNotes, Void, Void>() {
-            @Override
-            protected Void doInBackground(PersonalNotes... notes) {
-                db.notesAndUserDAO().insertNote(notes[0]);
-                return null;
-            }
-        }.execute(personalNote);
+        Long newId = null;
+        try {
+            newId = new AsyncTask<PersonalNotes, Void, Long>() {
+                @Override
+                protected Long doInBackground(PersonalNotes... notes) {
+                    return db.notesAndUserDAO().insertNote(notes[0]);
+                }
+            }.execute(personalNote).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(newId==null) return -1L;
+        return newId;
     }
 
     public void updatePersonalNote(PersonalNotes note) {

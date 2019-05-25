@@ -44,8 +44,9 @@
     <string name="show_all_tags">Pokaż wszystkie tagi</string>
     <string name="add_tags">Dodaj tagi</string>
     <string name="add_tags_messagebox">Wpisz tagi oddzielając je przecinkami: </string>
+    <string name="note_has_this_tag_already">Notatka jest już oznaczona tym tagiem!</string>
     <!--<string name="find_tags">Podaj tagi do wyszukania oddzielając je przecinkami: </string>-->
-    <string name="empty_tags_search_field">Treść wyszukiwania nie może być pusta!</string>
+    <!--<string name="empty_tags_search_field">Treść wyszukiwania nie może być pusta!</string>-->
 
 
     <!-- TODO: Remove or change this placeholder text -->

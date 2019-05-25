@@ -3,6 +3,7 @@ package bchabowski.journalapp;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements Colourable {
 
         model = new MainActivityModel(getApplication());
         super.setTheme(model.getTheme());
-//        super.setTheme(R.style.AppTheme);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_main);
         checkPassword();
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements Colourable {
     protected void onResume() {
         super.onResume();
         setEvents();
+        calendar.invalidate();
     }
 
     @Override
